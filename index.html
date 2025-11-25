@@ -5,150 +5,212 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>English with Ms Olga</title>
   <style>
-    /* Пастельный фон */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       line-height: 1.6;
-      color: #333;
-      max-width: 850px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #fdf9f5; /* молочный фон */
-      background-image: url('https://i.postimg.cc/1zmk6djG/Dizajn-bez-nazvania-(2).png');
+      color: #2d181e;
+      background-image: url('https://i.postimg.cc/QCjbFLt0/Dizajn-bez-nazvania.jpg');
+      background-size: cover;
       background-attachment: fixed;
-	  background-repeat: no-repeat;
+      background-position: center center;
+      min-height: 100vh;
+      padding: 2rem 1rem;
     }
 
-    h1, h2, h3 {
-      color: #2c3e50;
-    }
-
-    h1 {
-      font-size: 2.2em;
-      margin-bottom: 10px;
-      margin-top: 0;
-    }
-
-    h2 {
-      border-bottom: 1px solid #e8dcd5;
-      padding-bottom: 8px;
-      margin-top: 36px;
-    }
-
-    ul {
-      margin-top: 8px;
-      padding-left: 20px;
-    }
-
-    .header-block {
+    .header {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-
-    .header-text {
-      flex: 1;
-    }
-
-    .header-photo img {
-      max-width: 180px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
-
-    .price-list li {
-      display: flex;
-      justify-content: space-between;
       flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1000px;
+      margin: 0 auto 2.5rem;
+      gap: 1.5rem;
     }
 
-    .contact-button {
+    .header-text h1 {
+      font-size: 2.4rem;
+      color: #8b5a2b; /* soft gold */
+      margin-bottom: 0.5rem;
+    }
+
+    .header-text p {
+      font-size: 1.2rem;
+      color: #a86b6b; /* dusty rose */
+    }
+
+    .profile-photo {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #f5c2c2;
+      box-shadow: 0 6px 12px rgba(139, 90, 43, 0.2);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .card {
+      background: rgba(253, 246, 240, 0.85);
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      padding: 1.8rem;
+      box-shadow: 0 6px 16px rgba(139, 90, 43, 0.12);
+      border: 1px solid rgba(168, 107, 107, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h2 {
+      font-size: 1.4rem;
+      color: #8b5a2b;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f5c2c2;
+    }
+
+    .card p, .card ul {
+      font-size: 1.05rem;
+      color: #3a2a2e;
+    }
+
+    a.button {
       display: inline-block;
-      margin-top: 15px;
-      padding: 12px 24px;
-      background-color: #d4a7a1; /* пыльная роза */
-      color: white;
+      background: linear-gradient(135deg, #f5c2c2, #e6a8a8);
+      color: #8b5a2b;
       text-decoration: none;
-      border-radius: 8px;
+      padding: 0.8rem 1.6rem;
+      border-radius: 30px;
       font-weight: bold;
-      transition: background-color 0.3s;
+      margin-top: 1rem;
+      box-shadow: 0 4px 8px rgba(230, 168, 168, 0.4);
+      transition: all 0.3s ease;
     }
 
-    .contact-button:hover {
-      background-color: #c2928a;
+    a.button:hover {
+      background: linear-gradient(135deg, #e6a8a8, #d49a9a);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(230, 168, 168, 0.6);
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        text-align: center;
+        flex-direction: column;
+      }
+      .header-text h1 {
+        font-size: 2rem;
+      }
+      .profile-photo {
+        width: 140px;
+        height: 140px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="header-block">
+  <div class="header">
     <div class="header-text">
-      <h1>Преподаватель английского языка<br>Ольга Александровна Куцепалова</h1>
+      <h1>English with Ms Olga</h1>
+      <p>Ольга Александровна Куцепалова</p>
     </div>
-    <div class="header-photo">
-      <img src="https://i.postimg.cc/wBs2Rjjp/OK.png" alt="Фото Ольги Куцепаловой">
-    </div>
+    <img src="https://i.postimg.cc/wBs2Rjjp/OK.png" alt="Ольга Александровна" class="profile-photo">
   </div>
 
-  <h2>Обо мне</h2>
-  <p>
-    Я — дипломированный преподаватель английского языка, частный репетитор и специалист по подготовке к международным экзаменам. 
-    С 2004 года успешно готовлю учеников к сдаче экзаменов Cambridge (B2 First и др.). 
-    21 год в профессии, 10 лет в частной английской студии с книжным и кино клубами.
-    На данный момент являюсь старшим преподавателем на кафедре английского языка СмолГУ, где преподаю с 2004 года.
-    Обучаю фонетике, практике речи, методике подготовки к сдаче международных экзаменов и др. дисциплинам.
-    Сама сдала международный экзамен на уровень C1, поэтому знаю все тонкости и экспертные критерии оценки. 
-    Готова провести вас за руку к положительному результату.
-  </p>
+  <div class="container">
+    
+    <div class="card">
+      <h2>Обо мне</h2>
+      <p>
+	<ul>
+    <li>Дипломированный учитель английского языка.</li>
+	<li>10 лет в частной английской студии с книжным и кино клубами.</li>
+	<li>21 год в профессии. Старший преподаватель на кафедре английского языка СмолГУ с 2004.</li>
+	<li>Преподаю практическую фонетику, практику речи, практическую грамматику и методики подготовки к сдаче международных экзаменов.</li>
+	<li>Обладатель международного сертификата уровня С1 от Cambridge.</li>
+    <li>Знаю все тонкости и экспертные критерии оценивания.</li>
+	<li>Готова провести вас за руку к положительному результату.</li>
+	</ul></p>
+    </div>
 
-  <h2>Моя специализация</h2>
-  <ul>
-    <li>Общий английский для школьников (6-16 лет)</li>
-    <li>Подготовка к сдаче ОГЭ и ЕГЭ (8-9, 10-11 классы)</li>
-    <li>Подготовка к международным экзаменам: B2 First от Cambridge</li>
-    <li>Экспресс-консультации для студентов: Фонетика</li>
-  </ul>
+    <div class="card">
+      <h2>Моя специализация</h2>
+      <p>  
+	<ul>
+    <li>Общий английский для школьников (6-16 лет): курс Join In with Toby the Tiger (1-3 классы), курс More! (4-8 классы).</li>
+    <li>Подготовка к сдаче ОГЭ и ЕГЭ (8-9, 10-11 классы).</li>
+    <li>Подготовка к международному экзамену B2 First от Cambridge: курс Ready for FCE.</li>
+    <li>Экспресс-консультации для студентов по фонетике: транскрипция слов, вопросы ассимиляции и адаптации звуков в речи, правила интонирования.</li>
+  </ul></p>
+    </div>
 
-  <h2>Результаты моих учеников</h2>
-  <ul>
-    <li>Захар Г. — Вступительный экзамен в колледж в Ковентри, Англия на 100%, B2-C1</li>
-    <li>Сергей Т. — FCE Grade A, C1</li>
-    <li>Саша Л. — FCE Grade B, B2</li>
-    <li>Даша Е. — FCE Grade B, B2</li>
-    <li>Александр Д. — FCE Grade B, B2</li>
-    <li>Егор Ц. — ЕГЭ 94 балла</li>
-    <li>Полина С. — ЕГЭ 92 балла</li>
-    <li>Вероника О. — Экзамен в лицей на 9 / 10 баллов</li>
-    <li>Никита Б. — Экзамен в спец. школу, сильная группа</li>
-  </ul>
-  <p>За 2 года подготовки с уровня B1 мои ученики в 10 классе получили сертификаты Cambridge с отличными результатами.</p>
+    <div class="card">
+      <h2>Результаты учеников</h2>
+      <p>
+	  <ul>
+    <p>За 1 год подготовки с уровня B1 до B2 для поступления в зарубежный коллежд уже в 8 классе:</p>
+	<li>Захар Г. — Вступительный экзамен в колледж в Ковентри, Англия на 100%, B2-C1.</li>
+    <p>За 2 года подготовки с уровня B1 до B2 мои ученики получили сертификаты от Cambridge уже в 10 классе:</p>
+	<li>Сергей Т. — FCE Grade A, C1,</li>
+    <li>Саша Л. — FCE Grade B, B2,</li>
+    <li>Даша Е. — FCE Grade B, B2,</li>
+    <li>Александр Д. — FCE Grade B, B2.</li>
+	<p>Высокие баллы на ЕГЭ, поступление в вуз с языковым профилем подготовки:</p>
+    <li>Егор Ц. — ЕГЭ 94 балла,</li>
+    <li>Полина С. — ЕГЭ 92 балла.</li>
+	<p>Высокие баллы на вступительных испытаниях в спец. школы и лицеи:</p>
+    <li>Вероника О. — Экзамен в лицей на 9 / 10 баллов,</li>
+    <li>Никита Б. — Экзамен в спец. школу, сильная группа.</li>
+	</ul></p>
+    </div>
 
-  <h2>Как проходят занятия?</h2>
-  <ul>
-    <li>Младшая школа: весёлые песенки, сюжетные истории, языковые загадки, интерактивные игры</li>
-    <li>Средняя школа: живые диалоги + культурология, языковые тонкости + речевое портфолио, интерактивная практика + самоконтроль</li>
-    <li>Старшая школа: развитие всех систем и навыков: pronunciation, vocabulary, grammar, discourse, listening, reading, speaking, writing</li>
-    <li>Экзаменационный трек: анализ ваших сильных и слабых сторон на экспресс-диагностике, целеполагание</li>
-    <li>Экзаменационный трек: отработка частых ошибок, типичных для экзамена, пробные форматные экзамены</li>
-    <li>Индивидуальный подход и поддержка на каждом этапе</li>
-  </ul>
-  <p>Приходите на экспресс-консультацию — получите гайд по говорению, который даст вам +25 баллов на международном экзамене!</p>
+    <div class="card">
+      <h2>Как проходят занятия?</h2>
+      <p>  <ul>
+    <li>Младшая школа: весёлые песенки + сюжетные истории, языковые загадки + интерактивные игры.</li>
+    <li>Средняя школа: живые диалоги + культурология, языковые тонкости + речевое портфолио, интерактивная практика + самоконтроль.</li>
+    <li>Старшая школа: развитие всех систем и навыков: pronunciation, vocabulary, grammar, discourse, listening, reading, speaking, writing.</li>
+    <li>Экзаменационные треки: повышение общего уровня владения английским, проработка стратегий выполнения экзаменационных работ, чистка типичных экзаменационных ошибок, пробные форматные экзамены, развитие микро навыков.</li>
+    <li>Индивидуальный подход и поддержка на каждом этапе.</li>
+  </ul></p>
+    </div>
 
-  <h2>Форматы и цены</h2>
-  <ul class="price-list">
-    <li><span>Индивидуальные занятия: онлайн и офлайн (в Смоленске)</span></li>
-    <li><span>Английский для сдачи B2 First</span> <span>3 000 ₽ / 60 мин</span></li>
-    <li><span>Английский для сдачи ОГЭ / ЕГЭ</span> <span>2 000 ₽ / 60 мин</span></li>
-    <li><span>Общий английский</span> <span>1 250 ₽ / 40 мин, 1 750 ₽ / 60 мин</span></li>
-  </ul>
-  <p>Скидка 10% при оплате первого абонемента на месяц.</p>
+    <div class="card">
+      <h2>Форматы и цены</h2>
+      <p>
+    <li>Приходите на экспресс-консультацию — оценим ваши сильные стороны, подсветим точки роста, обговорим формат взаимодействия!</li>
+	<ul class="price-list">
+    <li><span>Индивидуальные занятия: онлайн (в Zoom) и офлайн (в Смоленске)</span></li>
+    <li><span>Английский для сдачи B2 First</span> <span>3000 ₽ / 60 мин</span></li>
+    <li><span>Английский для сдачи ОГЭ/ЕГЭ</span> <span>2000 ₽ / 60 мин</span></li>
+    <li><span>Общий английский</span> <span>1250 ₽ / 40 мин, 1750 ₽ / 60 мин</span></li>
+    <li>Скидка 10% при оплате первого абонемента на месяц.</li>
+	</ul>
+	</p>
+    </div>
 
-  <h2>Записаться на урок</h2>
-  <p>Готовы начать подготовку к экзамену или улучшить свой английский?</p>
-  <a href="https://t.me/OlgaKutsepalova_ELT" class="contact-button">Написать мне</a>
+    <div class="card">
+      <h2>Записаться на урок</h2>
+      <p>Готовы начать подготовку к экзамену или улучшить свой английский?</p>
+      <a href="https://t.me/OlgaKutsepalova_ELT" class="button">Написать мне</a>
+    </div>
+
+  </div>
 
 </body>
 </html>
-
