@@ -260,6 +260,42 @@
       <h2 id="contact">Записаться на урок</h2>
       <p>Готовы начать подготовку к экзамену или улучшить свой английский?</p>
       <a href="https://t.me/OlgaKutsepalova_ELT" class="button">Написать мне</a>
+		<br></br>
+	  
+      <h3 style="color: #8b5a2b; margin-bottom: 1rem;">🎁 Получите персональную скидку!</h3>
+      <p>Нажмите на сундучок — и узнайте, какая скидка на первые 3 занятия досталась именно вам!</p>
+  
+  <div id="giftButton" style="margin: 1.2rem 0; padding: 0.8rem 1.6rem; background: linear-gradient(135deg, #f5c2c2, #e6a8a8); color: #8b5a2b; font-weight: bold; border-radius: 30px; display: inline-block; cursor: pointer; box-shadow: 0 4px 8px rgba(230, 168, 168, 0.5); transition: all 0.3s;">
+    Открыть сундучок!
+  </div>
+
+  <div id="giftResult" style="font-size: 1.1rem; font-weight: bold; min-height: 2rem; margin-top: 1rem; color: #8b5a2b;"></div>
+
+  <p style="margin-top: 1rem; font-size: 0.95rem; color: #5a4a4e;">
+    <em>Скидка действует при первом обращении. Просто скажите код при записи в Telegram!</em>
+  </p>
+
+<script>
+  document.getElementById('giftButton').addEventListener('click', function() {
+    const discounts = [
+      { value: '5%', code: 'WELCOME5' },
+      { value: '10%', code: 'WELCOME10' },
+      { value: '15%', code: 'WELCOME15' }
+    ];
+    
+    const gift = discounts[Math.floor(Math.random() * discounts.length)];
+    const button = document.getElementById('giftButton');
+    const result = document.getElementById('giftResult');
+    
+    // Отключаем кнопку после нажатия
+    button.style.pointerEvents = 'none';
+    button.style.opacity = '0.7';
+    button.textContent = 'Сундучок открыт!';
+
+    // Показываем результат с небольшой паузой для "драматизма"
+    result.textContent = '🎉 Ура! Ваша скидка: ' + gift.value + '! Используйте код: ' + gift.code;
+  });
+</script>
     </div>
 
 <!-- Плашка 1: Курс для учителей Skill Master on Genially -->
@@ -336,3 +372,4 @@
 </div>
 </body>
 </html>
+
