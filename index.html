@@ -20,26 +20,34 @@
       background-attachment: fixed;
       background-position: center center;
       min-height: 100vh;
-      padding: 2rem 1rem;
+      padding: 1.5rem 1rem;
     }
 
-    /* Fixed navigation bar */
-    .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
+    /* Горизонтальная навигация с прокруткой */
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: rgba(253, 246, 240, 0.92);
       backdrop-filter: blur(8px);
-      padding: 0.8rem 1rem;
-      z-index: 1000;
+      padding: 0.7rem 1rem;
+      margin: 1rem auto 2rem;
+      max-width: 1000px;
+      border-radius: 12px;
       box-shadow: 0 2px 10px rgba(139, 90, 43, 0.1);
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 1rem;
     }
-    .navbar a {
+
+    .nav-scroll {
+      display: flex;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      white-space: nowrap;
+      width: 70%;
+      gap: 1rem;
+      padding: 0 0.5rem;
+    }
+
+    .nav-item {
       color: #8b5a2b;
       text-decoration: none;
       font-weight: 600;
@@ -47,21 +55,39 @@
       padding: 0.4rem 0.8rem;
       border-radius: 20px;
       transition: all 0.25s ease;
+      min-width: max-content;
     }
-    .navbar a:hover {
+
+    .nav-item:hover {
       background: #f5c2c2;
       color: #8b5a2b;
+    }
+
+    .nav-arrow {
+      background: #f5c2c2;
+      border: none;
+      color: #8b5a2b;
+      font-size: 1.2rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin: 0 0.5rem;
+    }
+
+    .nav-arrow:hover {
+      background: #e6a8a8;
+      transform: scale(1.05);
     }
 
     .header {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      align-items: flex-start; /* выравнивание по верху */
+      align-items: flex-start;
       max-width: 1000px;
-      margin: 0 auto 2.5rem;
+      margin: 0 auto 1.5rem;
       gap: 1.5rem;
-      padding-top: 80px; /* ⬅️ ВНУТРЕННИЙ ОТСТУП — содержимое начинается ПОД шапкой */
     }
     .header-text {
       flex: 1;
@@ -76,7 +102,7 @@
       color: #a86b6b;
     }
     .profile-photo-container {
-      margin-top: 3.5rem; /* фото сдвинуто ВНИЗ под ФИО */
+      margin-top: 3.5rem;
     }
     .profile-photo {
       width: 160px;
@@ -86,7 +112,6 @@
       border: 3px solid #f5c2c2;
       box-shadow: 0 6px 12px rgba(139, 90, 43, 0.2);
     }
-
     .container {
       max-width: 1000px;
       margin: 0 auto;
@@ -102,7 +127,7 @@
       box-shadow: 0 6px 16px rgba(139, 90, 43, 0.12);
       border: 1px solid rgba(168, 107, 107, 0.2);
       transition: transform 0.3s ease;
-      scroll-margin-top: 150px; /* для якорных ссылок */
+      scroll-margin-top: 150px;
     }
     .card:hover {
       transform: translateY(-5px);
@@ -150,27 +175,27 @@
         width: 140px;
         height: 140px;
       }
-      .header {
-        padding-top: 60px; /* чуть меньше на мобиле */
+      .nav-container {
+        padding: 0.6rem 0.5rem;
+        margin: 0.8rem auto 1.5rem;
       }
-      .card {
-        scroll-margin-top: 120px;
+      .nav-scroll {
+        width: 60%;
+        gap: 0.7rem;
+        padding: 0 0.3rem;
+      }
+      .nav-item {
+        font-size: 0.85rem;
+        padding: 0.35rem 0.6rem;
+      }
+      .nav-arrow {
+        font-size: 1rem;
+        padding: 0.35rem 0.5rem;
       }
     }
   </style>
 </head>
 <body>
-
-<!-- Fixed navigation -->
-<nav class="navbar">
-  <a href="#about">Обо мне</a>
-  <a href="#specialization">Моя специализация</a>
-  <a href="#results">Результаты учеников</a>
-  <a href="#lessons">Как проходят занятия</a>
-  <a href="#prices">Форматы и цены</a>
-  <a href="#contact">Записаться на урок</a>
-  <a href="#course">Курс для учителей</a>
-</nav>
 
 <!-- Заголовок и фото -->
 <div class="header">
@@ -183,7 +208,22 @@
   </div>
 </div>
 
-<!-- Основной контент -->
+<!-- Горизонтальная навигация (новая) -->
+<div class="nav-container">
+  <button class="nav-arrow left" onclick="scrollNav('left')">&#10094;</button>
+  <div class="nav-scroll" id="navScroll">
+    <a href="#about" class="nav-item">Обо мне</a>
+    <a href="#specialization" class="nav-item">Моя специализация</a>
+    <a href="#results" class="nav-item">Результаты учеников</a>
+    <a href="#lessons" class="nav-item">Как проходят занятия</a>
+    <a href="#prices" class="nav-item">Форматы и цены</a>
+    <a href="#contact" class="nav-item">Записаться на урок</a>
+    <a href="#course" class="nav-item">Курс для учителей</a>
+  </div>
+  <button class="nav-arrow right" onclick="scrollNav('right')">&#10095;</button>
+</div>
+
+<!-- Основной контент (без изменений) -->
 <div class="container">
   <div class="card" id="about">
     <h2>Обо мне</h2>
@@ -197,7 +237,6 @@
       <li>Помогаю в разработке учебных материалов на онлайн платформе Genially.</li>
     </ul>
   </div>
-
   <div class="card" id="specialization">
     <h2>Моя специализация</h2>
     <ul>
@@ -209,7 +248,6 @@
       <li>Консультации по созданию интерактивных учебных презентаций на онлайн-платформе Genially.</li>
     </ul>
   </div>
-
   <div class="card" id="results">
     <h2>Результаты учеников</h2>
     <p>За 1 год подготовки с уровня B1 до B2 мой ученик прошёл вступительные испытания в зарубежный колледж уже в 8 классе:</p>
@@ -226,7 +264,6 @@
     <li>Вероника О. — Экзамен в лицей на 9 / 10 баллов,</li>
     <li>Никита Б. — Экзамен в спец. школу, сильная группа.</li>
   </div>
-
   <div class="card" id="lessons">
     <h2>Как проходят занятия</h2>
     <ul>
@@ -237,7 +274,6 @@
       <li>Индивидуальный подход и поддержка на каждом этапе.</li>
     </ul>
   </div>
-
   <div class="card" id="prices">
     <h2>Форматы и цены</h2>
     <li>Приходите на экспресс-консультацию — оценим ваши сильные стороны, подсветим точки роста, обговорим формат взаимодействия!</li><br><br>
@@ -250,7 +286,6 @@
       <li>Методические консультации для учителей иностранного языка — 2000 ₽ / 60 мин</li>
     </ul>
   </div>
-
   <div class="card" id="contact">
     <h2>Записаться на урок</h2>
     <p>Готовы начать подготовку к экзамену или улучшить свой английский?</p>
@@ -281,7 +316,6 @@
       });
     </script>
   </div>
-
   <!-- Курс для учителей -->
   <div class="card" id="course">
     <h2>Курс для учителей Skill Master on Genially</h2>
@@ -290,7 +324,6 @@
     <p>В своей детективной квестовой игре <strong>«The Case of the Missing Child»</strong> мы используем глубинные, цепляющие ум учеников элементы: самоидентификацию с выбранным персонажем, поучительный сюжет из многоходовок и сочное языковое оформление.</p><br><br>
     <p>На программе мы даём доступ к квесту и пошагово показываем, как создать похожие вовлекающие педдизайнерские игры.</p>
   </div>
-
   <div class="card">
     <h2>Что входит в программу</h2>
     <p>Видеоуроки в закрытой группе Telegram:</p>
@@ -315,7 +348,6 @@
       <li>17. Что под форзацем? → книги и всплывающие информационные окна.</li>
     </ul>
   </div>
-
   <div class="card">
     <h2>Стоимость курса и бонусы</h2>
     <p><strong>Бонусные уроки:</strong></p>
@@ -334,7 +366,7 @@
   </div>
 </div>
 
-<!-- Футер -->
+<!-- Футер (без изменений) -->
 <hr style="margin: 3rem auto; border: 0; border-top: 1px solid #e6a8a8; max-width: 900px;">
 <div style="text-align: center; font-size: 0.9rem; color: #5a4a4e; max-width: 900px; margin: 1.5rem auto; padding: 0 1rem;">
   <p>
@@ -347,6 +379,19 @@
     © 2025 English with Ms Olga. Все права защищены.
   </p>
 </div>
+
+<!-- Скрипт прокрутки навигации -->
+<script>
+  function scrollNav(direction) {
+    const nav = document.getElementById('navScroll');
+    const scrollAmount = 150;
+    if (direction === 'left') {
+      nav.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      nav.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  }
+</script>
 
 </body>
 </html>
