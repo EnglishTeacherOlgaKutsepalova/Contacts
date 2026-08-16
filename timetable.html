@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Расписание — Ольга Куцепалова</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav__inner">
+    <a href="index.html" class="site-nav__brand">
+      <span class="site-nav__brand-mark" aria-hidden="true"></span>
+      Ольга Куцепалова
+    </a>
+    <ul class="site-nav__links">
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="timetable.html" aria-current="page">Расписание</a></li>
+      <li><a href="resources.html">Материалы</a></li>
+      <li><a href="library.html">Библиотека</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="container">
+    <p class="eyebrow">Расписание занятий</p>
+    <h1>Timetable</h1>
+    <p class="page-head__lede">
+      Здесь ведётся расписание всех учеников, домашние задания и личные
+      ссылки на кабинеты. Раздел редактируется учителем.
+    </p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ============ ВХОД ДЛЯ АДМИНИСТРАТОРА ============ -->
+  <section id="admin-gate" class="card auth-gate">
+    <h2>Кабинет администратора</h2>
+    <p class="muted">Войдите, чтобы добавлять учеников и обновлять домашнее задание.</p>
+    <form id="login-form" class="auth-gate__form">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input id="login-email" type="email" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="login-pass">Пароль</label>
+        <input id="login-pass" type="password" autocomplete="current-password" required>
+      </div>
+      <p id="login-error" class="form-error" role="alert"></p>
+      <button type="submit" class="btn btn-primary">Войти</button>
+    </form>
+  </section>
+
+  <!-- ============ АДМИН-ПАНЕЛЬ (видна после входа) ============ -->
+  <section id="admin-panel" hidden>
+    <div class="panel-top">
+      <h2>Ученики</h2>
+      <button id="logout-btn" class="btn btn-ghost">Выйти</button>
+    </div>
+
+    <!-- Форма добавления ученика -->
+    <form id="student-form" class="card student-form">
+      <h3 id="form-title">Добавить ученика</h3>
+      <input type="hidden" id="student-id">
+      <div class="grid-2">
+        <div class="field">
+          <label for="f-name">Имя ученика</label>
+          <input id="f-name" required>
+        </div>
+        <div class="field">
+          <label for="f-birthday">День рождения</label>
+          <input id="f-birthday" type="date">
+        </div>
+        <div class="field">
+          <label for="f-textbook">Учебник</label>
+          <input id="f-textbook" placeholder="Например, Cutting Edge Pre-Int">
+        </div>
+        <div class="field">
+          <label for="f-day">День занятия</label>
+          <select id="f-day">
+            <option>Понедельник</option><option>Вторник</option><option>Среда</option>
+            <option>Четверг</option><option>Пятница</option><option>Суббота</option><option>Воскресенье</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-time">Время занятия</label>
+          <input id="f-time" type="time">
+        </div>
+        <div class="field">
+          <label for="f-price">Стоимость занятия (₽)</label>
+          <input id="f-price" type="number" min="0" step="50">
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-homework">Текущее домашнее задание</label>
+        <textarea id="f-homework" rows="2" placeholder="Что задано к следующему уроку"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submit-btn">Добавить ученика</button>
+        <button type="button" class="btn btn-ghost" id="cancel-edit" hidden>Отменить редактирование</button>
+      </div>
+    </form>
+
+    <!-- Список учеников -->
+    <div id="students-list" class="students-list"></div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">© <span id="year"></span> Ольга Куцепалова.</div>
+</footer>
+
+<!-- Firebase SDK (compat-версия — без сборщиков, подходит для GitHub Pages) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/timetable.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

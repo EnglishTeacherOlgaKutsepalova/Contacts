@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мой кабинет</title>
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+<link rel="stylesheet" href="../css/resources.css">
+<link rel="stylesheet" href="../css/library.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav__inner">
+    <a href="../index.html" class="site-nav__brand">
+      <span class="site-nav__brand-mark" aria-hidden="true"></span>
+      Ольга Куцепалова
+    </a>
+  </div>
+</nav>
+
+<main class="container student-view">
+  <div id="loading" class="muted">Загружаем ваш кабинет…</div>
+
+  <div id="not-found" class="card auth-gate" hidden>
+    <h2>Кабинет не найден</h2>
+    <p class="muted">Проверьте, пожалуйста, ссылку, которую прислал учитель, или напишите ей напрямую.</p>
+  </div>
+
+  <section id="student-card" class="card student-detail" hidden>
+    <p class="eyebrow">Личный кабинет</p>
+    <h1 id="s-name"></h1>
+
+    <div class="grid-2 student-detail__meta">
+      <div>
+        <label>Занятие</label>
+        <p id="s-schedule" class="student-detail__value"></p>
+      </div>
+      <div>
+        <label>Учебник</label>
+        <p id="s-textbook" class="student-detail__value"></p>
+      </div>
+    </div>
+
+    <div class="homework-block">
+      <label>Текущее домашнее задание</label>
+      <p id="s-homework" class="homework-block__text"></p>
+    </div>
+
+    <p class="muted student-detail__updated" id="s-updated"></p>
+  </section>
+
+  <section id="progress-section" class="card student-detail" hidden>
+    <p class="eyebrow">Библиотека</p>
+    <h2>Мой прогресс чтения</h2>
+    <div id="progress-list" class="progress-list"></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">© <span id="year"></span> Ольга Куцепалова.</div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/student.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

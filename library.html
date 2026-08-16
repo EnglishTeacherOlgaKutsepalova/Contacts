@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Библиотека — Ольга Куцепалова</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/library.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav__inner">
+    <a href="index.html" class="site-nav__brand">
+      <span class="site-nav__brand-mark" aria-hidden="true"></span>
+      Ольга Куцепалова
+    </a>
+    <ul class="site-nav__links">
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="timetable.html">Расписание</a></li>
+      <li><a href="resources.html">Материалы</a></li>
+      <li><a href="library.html" aria-current="page">Библиотека</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="container">
+    <p class="eyebrow">Книги для чтения</p>
+    <h1>Library</h1>
+    <p class="page-head__lede">Книги с аудио- и видео-начиткой, интерактивами и личным трекером прогресса.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ============ ВИТРИНА КНИГ (публично) ============ -->
+  <section id="books-grid" class="books-grid"></section>
+
+  <hr class="section-divider">
+
+  <!-- ============ ВХОД ДЛЯ АДМИНИСТРАТОРА ============ -->
+  <section id="admin-gate" class="card auth-gate">
+    <h2>Кабинет администратора</h2>
+    <p class="muted">Войдите, чтобы добавлять книги и отмечать прогресс учеников.</p>
+    <form id="login-form" class="auth-gate__form">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input id="login-email" type="email" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="login-pass">Пароль</label>
+        <input id="login-pass" type="password" autocomplete="current-password" required>
+      </div>
+      <p id="login-error" class="form-error" role="alert"></p>
+      <button type="submit" class="btn btn-primary">Войти</button>
+    </form>
+  </section>
+
+  <section id="admin-panel" hidden>
+    <div class="panel-top">
+      <h2>Управление библиотекой</h2>
+      <button id="logout-btn" class="btn btn-ghost">Выйти</button>
+    </div>
+
+    <!-- --- Добавление книги --- -->
+    <form id="book-form" class="card student-form">
+      <h3 id="book-form-title">Добавить книгу</h3>
+      <input type="hidden" id="b-id">
+      <div class="grid-2">
+        <div class="field">
+          <label for="b-title">Название</label>
+          <input id="b-title" required>
+        </div>
+        <div class="field">
+          <label for="b-cover">Обложка (ссылка на картинку)</label>
+          <input id="b-cover" placeholder="assets/images/...jpg или https://...">
+        </div>
+        <div class="field">
+          <label for="b-level">Уровень</label>
+          <select id="b-level">
+            <option>Beginner</option><option>Elementary</option><option>Pre-Intermediate</option>
+            <option>Intermediate</option><option>Upper-Intermediate</option><option>Advanced</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="b-audio">Ссылка на аудио</label>
+          <input id="b-audio" placeholder="https://.../audio.mp3">
+        </div>
+        <div class="field">
+          <label for="b-video">Видео на RUTUBE (ссылка на embed)</label>
+          <input id="b-video" placeholder="https://rutube.ru/play/embed/xxxxxxxx">
+        </div>
+        <div class="field">
+          <label for="b-interactive">Ссылка на интерактив</label>
+          <input id="b-interactive" placeholder="games/book-quiz/index.html">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="book-submit-btn">Добавить книгу</button>
+        <button type="button" class="btn btn-ghost" id="book-cancel-edit" hidden>Отменить</button>
+      </div>
+    </form>
+
+    <div id="admin-books-list" class="admin-resources-list"></div>
+
+    <hr class="section-divider">
+
+    <!-- --- Трекер прогресса --- -->
+    <div class="card progress-editor">
+      <h3>Трекер прогресса ученика</h3>
+      <div class="field">
+        <label for="progress-student">Ученик</label>
+        <select id="progress-student"></select>
+      </div>
+      <div id="progress-books-list"></div>
+      <p id="progress-hint" class="muted">Выберите ученика, чтобы увидеть список книг.</p>
+      <div class="student-card__link" id="progress-link-row" hidden>
+        <label>Личная ссылка на прогресс (та же, что и на расписание)</label>
+        <div class="link-row">
+          <input id="progress-link" type="text" readonly>
+          <button class="btn btn-ghost btn-sm" id="progress-copy">Скопировать</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">© <span id="year"></span> Ольга Куцепалова.</div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/library.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Материалы — Ольга Куцепалова</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/resources.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav__inner">
+    <a href="index.html" class="site-nav__brand">
+      <span class="site-nav__brand-mark" aria-hidden="true"></span>
+      Ольга Куцепалова
+    </a>
+    <ul class="site-nav__links">
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="timetable.html">Расписание</a></li>
+      <li><a href="resources.html" aria-current="page">Материалы</a></li>
+      <li><a href="library.html">Библиотека</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="container">
+    <p class="eyebrow">Учебные материалы</p>
+    <h1>Resources</h1>
+    <p class="page-head__lede">Игры и тренажёры по уровням — бесплатно/платно.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ============ ПОИСК И ФИЛЬТРЫ (публично) ============ -->
+  <section class="filters card">
+    <div class="field">
+      <label for="search">Поиск по названию</label>
+      <input id="search" type="search" placeholder="Например, «неправильные глаголы»">
+    </div>
+    <div class="field">
+      <label for="filter-level">Уровень</label>
+      <select id="filter-level">
+        <option value="">Все уровни</option>
+        <option>Beginner</option><option>Elementary</option><option>Pre-Intermediate</option>
+        <option>Intermediate</option><option>Upper-Intermediate</option><option>Advanced</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="filter-age">Возраст</label>
+      <select id="filter-age">
+        <option value="">Любой возраст</option>
+        <option>6–8 лет</option><option>9–11 лет</option><option>12–14 лет</option><option>15+ лет</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- ============ ВИТРИНА КАРТОЧЕК ============ -->
+  <section id="resources-grid" class="resources-grid"></section>
+  <p id="empty-state" class="muted" hidden>Ничего не нашлось — попробуйте изменить поиск или фильтры.</p>
+
+  <hr class="section-divider">
+
+  <!-- ============ ВХОД ДЛЯ АДМИНИСТРАТОРА ============ -->
+  <section id="admin-gate" class="card auth-gate">
+    <h2>Кабинет администратора</h2>
+    <p class="muted">Войдите, чтобы добавлять и редактировать материалы.</p>
+    <form id="login-form" class="auth-gate__form">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input id="login-email" type="email" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="login-pass">Пароль</label>
+        <input id="login-pass" type="password" autocomplete="current-password" required>
+      </div>
+      <p id="login-error" class="form-error" role="alert"></p>
+      <button type="submit" class="btn btn-primary">Войти</button>
+    </form>
+  </section>
+
+  <section id="admin-panel" hidden>
+    <div class="panel-top">
+      <h2>Управление материалами</h2>
+      <button id="logout-btn" class="btn btn-ghost">Выйти</button>
+    </div>
+
+    <form id="resource-form" class="card student-form">
+      <h3 id="form-title">Добавить материал</h3>
+      <input type="hidden" id="r-id">
+      <div class="grid-2">
+        <div class="field">
+          <label for="r-title">Название</label>
+          <input id="r-title" required>
+        </div>
+        <div class="field">
+          <label for="r-image">Обложка (ссылка на картинку)</label>
+          <input id="r-image" placeholder="assets/images/...jpg или https://...">
+        </div>
+        <div class="field">
+          <label for="r-level">Уровень</label>
+          <select id="r-level">
+            <option>Beginner</option><option>Elementary</option><option>Pre-Intermediate</option>
+            <option>Intermediate</option><option>Upper-Intermediate</option><option>Advanced</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="r-age">Возраст</label>
+          <select id="r-age">
+            <option>6–8 лет</option><option>9–11 лет</option><option>12–14 лет</option><option>15+ лет</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="r-type">Тип доступа</label>
+          <select id="r-type">
+            <option value="free">Бесплатная игра</option>
+            <option value="demo">Демо-версия</option>
+            <option value="paid">Платно (ссылка на оплату)</option>
+          </select>
+        </div>
+        <div class="field" id="path-field">
+          <label for="r-path">Путь к игре (папка в /games)</label>
+          <input id="r-path" placeholder="games/my-game/index.html">
+        </div>
+        <div class="field" id="payment-field" hidden>
+          <label for="r-payment">Ссылка на оплату (Prodamus)</label>
+          <input id="r-payment" placeholder="https://payform.ru/...">
+        </div>
+      </div>
+      <div class="field">
+        <label for="r-description">Краткое описание</label>
+        <textarea id="r-description" rows="2"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submit-btn">Добавить материал</button>
+        <button type="button" class="btn btn-ghost" id="cancel-edit" hidden>Отменить</button>
+      </div>
+      <p class="hint">
+        Чтобы добавить новую игру: скопируйте папку игры (со своим <code>index.html</code>
+        и ассетами) в <code>/games/</code>, затем укажите путь к ней здесь — переписывать
+        код сайта не нужно.
+      </p>
+    </form>
+
+    <div id="admin-resources-list" class="admin-resources-list"></div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">© <span id="year"></span> Ольга Куцепалова.</div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/resources.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

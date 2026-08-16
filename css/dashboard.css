@@ -1,0 +1,97 @@
+.page-head {
+  padding: 56px 0 32px;
+}
+.page-head h1 {
+  font-size: clamp(2rem, 3.4vw, 2.6rem);
+}
+.page-head__lede {
+  max-width: 60ch;
+  color: var(--cocoa-600);
+}
+
+main.container { padding-bottom: 80px; }
+
+.muted { color: var(--cocoa-600); }
+
+/* --- Auth gate --- */
+.auth-gate {
+  max-width: 420px;
+  padding: 32px;
+  margin: 0 auto 48px;
+}
+.auth-gate h2 { margin-bottom: 6px; }
+.auth-gate__form { margin-top: 20px; }
+.form-error {
+  color: #B4483A;
+  font-size: 0.85rem;
+  min-height: 1.2em;
+  margin: 4px 0 4px;
+}
+
+/* --- Admin panel layout --- */
+.panel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.student-form { padding: 28px; margin-bottom: 32px; }
+.form-actions { display: flex; gap: 12px; margin-top: 8px; }
+
+.students-list { display: grid; gap: 16px; }
+
+.student-card { padding: 22px 24px; }
+.student-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.student-card__actions { display: flex; gap: 8px; flex-shrink: 0; }
+.btn-sm { padding: 8px 14px; font-size: 0.82rem; }
+
+.student-card__meta {
+  display: flex;
+  gap: 32px;
+  margin: 14px 0;
+  flex-wrap: wrap;
+}
+.student-card__meta dt { font-size: 0.78rem; color: var(--cocoa-600); font-weight: 700; }
+.student-card__meta dd { margin: 2px 0 0; }
+
+.student-card__homework { margin: 14px 0; }
+.student-card__homework textarea { margin-bottom: 8px; }
+
+.student-card__link { margin-top: 14px; }
+.link-row { display: flex; gap: 8px; }
+.link-row input { font-size: 0.82rem; color: var(--cocoa-600); }
+
+/* --- Student personal view --- */
+.student-view { padding-top: 48px; max-width: 640px; }
+.student-detail { padding: 36px; }
+.student-detail__meta { margin: 20px 0 24px; }
+.student-detail__value { font-weight: 600; margin: 0; }
+
+.homework-block {
+  background: var(--peach-100);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+}
+.homework-block__text {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  margin: 6px 0 0;
+}
+.student-detail__updated { margin-top: 18px; font-size: 0.82rem; }
+
+@media (max-width: 640px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
