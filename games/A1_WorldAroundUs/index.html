@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>English Games — играй и учи английский</title>
+<meta name="description" content="Витрина обучающих игр по английскому языку для детей 10 лет, уровень CEFR A1, тема «Окружающий мир».">
+<style>
+/* ============================================================
+   ПАЛИТРА И БАЗА
+   ============================================================ */
+:root{
+  --wood-1:#d9a05b; --wood-2:#b9762f; --wood-3:#8a5220;
+  --leaf-1:#8ec63f; --leaf-2:#5b9c1e; --leaf-3:#3d7010;
+  --gold-1:#ffd24a; --gold-2:#f5a623; --gold-3:#d9760a;
+  --ink:#3c2a12; --ink-soft:#6b5231;
+  --card-pink:#f6b8c8; --card-pink-d:#d4677f;
+  --card-green:#cfe6a0; --card-green-d:#5f8f24;
+  --card-purple:#d9bdf2; --card-purple-d:#8148c0;
+  --paper:#fffaf0;
+  --shadow:0 10px 24px rgba(30,20,5,.35);
+  --radius:26px;
+  --font: "Baloo 2","Nunito","Segoe UI Rounded","Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,"Trebuchet MS",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:var(--font); color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  background:#2f5a1c;
+  overflow-x:hidden;
+}
+/* Фон-лес: если положить свой файл assets/forest.jpg — он подхватится автоматически,
+   иначе рисуется CSS-градиентами (солнечная поляна). */
+#bg{
+  position:fixed; inset:0; z-index:-2;
+  background-image:
+    url("assets/forest.jpg"),
+    radial-gradient(120% 80% at 50% 0%, rgba(255,240,170,.95) 0%, rgba(255,214,120,.55) 22%, rgba(140,180,60,0) 60%),
+    radial-gradient(70% 55% at 50% 42%, #cfe58a 0%, #93c04a 40%, #5f9128 70%, #3f6b1a 100%),
+    linear-gradient(180deg,#2c4a14 0%, #4a7a1e 35%, #6ea62c 70%, #4f7c1c 100%);
+  background-size:cover,auto,auto,auto;
+  background-position:center;
+}
+/* Лучи света и «боке» */
+#bg::after{
+  content:""; position:absolute; inset:0;
+  background:
+    repeating-conic-gradient(from 200deg at 55% -10%, rgba(255,255,210,.16) 0deg 3deg, rgba(255,255,210,0) 3deg 9deg);
+  mix-blend-mode:screen; pointer-events:none;
+}
+#bokeh{position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden}
+.dot{position:absolute; border-radius:50%; background:radial-gradient(circle at 35% 35%,#fff9d2,rgba(255,240,160,0));
+  filter:blur(.5px); animation:float linear infinite}
+@keyframes float{0%{transform:translateY(0) scale(1);opacity:.0}
+  10%{opacity:.9} 90%{opacity:.6} 100%{transform:translateY(-120vh) scale(1.25);opacity:0}}
+
+/* ============================================================
+   ШАПКА
+   ============================================================ */
+header{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; gap:18px;
+  padding:10px clamp(12px,3vw,34px);
+  backdrop-filter:blur(2px);
+}
+.logo{display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none}
+.logo b{
+  display:block; font-size:clamp(22px,2.4vw,34px); line-height:.95; font-weight:900; letter-spacing:.5px;
+  color:#fff; -webkit-text-stroke:5px var(--leaf-3); paint-order:stroke fill;
+  text-shadow:0 4px 0 rgba(0,0,0,.25);
+}
+.logo b.g{color:var(--gold-1)}
+nav{display:flex; gap:6px; margin:0 auto; flex-wrap:wrap; justify-content:center}
+.nav-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  border:0; cursor:pointer; font:inherit; font-weight:800; font-size:clamp(13px,1.05vw,17px);
+  color:#fff; background:rgba(30,50,10,.30); padding:10px 18px; border-radius:999px;
+  text-shadow:0 2px 4px rgba(0,0,0,.55); transition:.18s transform,.18s background;
+}
+.nav-btn:hover{background:rgba(30,50,10,.5); transform:translateY(-2px)}
+.nav-btn[aria-current="page"]{background:linear-gradient(180deg,#8cc63e,#5c9a1d); box-shadow:0 4px 0 #3d7010,var(--shadow)}
+.btn-login{
+  background:linear-gradient(180deg,var(--gold-1),var(--gold-2)); color:#5a3200;
+  box-shadow:0 5px 0 var(--gold-3), var(--shadow); text-shadow:none;
+}
+.btn-login:hover{background:linear-gradient(180deg,#ffdc6d,#f9b53c)}
+
+/* ============================================================
+   ОБЩИЕ ЭЛЕМЕНТЫ
+   ============================================================ */
+main{padding:0 clamp(12px,3vw,34px) 60px; position:relative}
+.screen{display:none; animation:pop .35s cubic-bezier(.2,1.4,.5,1)}
+.screen.active{display:block}
+@keyframes pop{from{opacity:0; transform:translateY(14px) scale(.98)} to{opacity:1; transform:none}}
+
+.btn{
+  border:0; cursor:pointer; font:inherit; font-weight:900; color:#fff;
+  padding:13px 26px; border-radius:999px; font-size:17px;
+  background:linear-gradient(180deg,var(--leaf-1),var(--leaf-2)); box-shadow:0 5px 0 var(--leaf-3),var(--shadow);
+  transition:.12s transform;
+}
+.btn:hover{transform:translateY(-2px)} .btn:active{transform:translateY(3px); box-shadow:0 2px 0 var(--leaf-3)}
+.btn.gold{background:linear-gradient(180deg,var(--gold-1),var(--gold-2)); color:#5a3200; box-shadow:0 5px 0 var(--gold-3),var(--shadow)}
+.btn.ghost{background:rgba(255,255,255,.85); color:var(--ink); box-shadow:0 5px 0 #c9b189,var(--shadow)}
+.btn[disabled]{filter:grayscale(.6) opacity(.55); cursor:not-allowed; transform:none}
+
+/* Деревянная панель */
+.wood{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.25),rgba(0,0,0,.12)),
+    repeating-linear-gradient(90deg,var(--wood-1) 0 7px,var(--wood-2) 7px 14px);
+  padding:12px; border-radius:var(--radius);
+  box-shadow:var(--shadow), inset 0 0 0 3px rgba(255,255,255,.22);
+}
+.wood-in{background:var(--paper); border-radius:16px; padding:clamp(14px,2.4vw,26px)}
+
+/* ============================================================
+   ГЛАВНЫЙ ЭКРАН
+   ============================================================ */
+.hero{padding-top:clamp(6px,1.5vh,22px)}
+.title-wrap{text-align:center}
+.big-title{margin:0; line-height:.86; font-weight:900; letter-spacing:1px}
+.big-title span{
+  display:block; font-size:clamp(38px,5.6vw,76px);
+  -webkit-text-stroke:10px var(--leaf-3); paint-order:stroke fill;
+  text-shadow:0 6px 0 rgba(0,0,0,.22), 0 10px 18px rgba(0,0,0,.35);
+}
+.big-title .l1{color:#fdfff4}
+.big-title .l2{color:var(--gold-1)}
+.ribbon{
+  display:inline-block; margin:clamp(20px,3vh,32px) auto 0; padding:8px 32px; position:relative;
+  background:linear-gradient(180deg,#f5d99a,#e0b264); color:#7a4a12; font-weight:900;
+  font-size:clamp(14px,1.7vw,24px); border-radius:8px;
+  box-shadow:var(--shadow), inset 0 0 0 3px rgba(255,255,255,.45);
+}
+.start-btn{
+  display:block; width:fit-content; margin:clamp(32px,5vh,54px) auto 0; font-size:clamp(18px,2vw,24px);
+  padding:16px 48px;
+}
+.ribbon::before,.ribbon::after{
+  content:""; position:absolute; top:8px; width:26px; height:calc(100% - 16px);
+  background:#c99447; border-radius:4px;
+}
+.ribbon::before{left:-18px; clip-path:polygon(0 0,100% 0,100% 100%,0 100%,30% 50%)}
+.ribbon::after{right:-18px; clip-path:polygon(0 0,100% 0,70% 50%,100% 100%,0 100%)}
+
+.cards{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(10px,1.6vw,22px); margin:clamp(14px,2.2vh,26px) auto 0; max-width:900px}
+.games-cards{margin-top:260px; max-width:1100px}
+.card{
+  position:relative; cursor:pointer; border:0; font:inherit; text-align:center;
+  padding:11px; border-radius:22px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.28),rgba(0,0,0,.16)),
+    repeating-linear-gradient(90deg,var(--wood-1) 0 7px,var(--wood-2) 7px 14px);
+  box-shadow:var(--shadow); transition:.2s transform,.2s filter;
+}
+.card:hover{transform:translateY(-8px) rotate(-.6deg); filter:brightness(1.06)}
+.card .vine{position:absolute; top:-14px; left:14px; font-size:26px; transform:rotate(-20deg)}
+.card .vine.r{left:auto; right:14px; transform:rotate(20deg) scaleX(-1)}
+.card-in{border-radius:14px; padding:22px 14px 26px; box-shadow:inset 0 0 0 3px rgba(255,255,255,.5)}
+.card h3{margin:0; font-size:clamp(17px,1.7vw,25px); font-weight:900; letter-spacing:1px; text-transform:uppercase}
+.card p{margin:6px 0 12px; font-weight:700; font-size:clamp(12px,1.1vw,16px); opacity:.85}
+.card .pic{font-size:clamp(44px,5.4vw,74px); line-height:1.1; filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}
+.card .go{
+  margin:14px auto 0; width:56px; height:56px; border-radius:50%; display:grid; place-items:center;
+  color:#fff; font-size:26px; box-shadow:0 5px 0 rgba(0,0,0,.25), var(--shadow);
+}
+.c1 .card-in{background:linear-gradient(180deg,#fbd4de,var(--card-pink))} .c1 h3{color:#b33a56} .c1 .go{background:linear-gradient(180deg,#f383a2,var(--card-pink-d))}
+.c2 .card-in{background:linear-gradient(180deg,#e6f3c4,var(--card-green))} .c2 h3{color:#4c7a17} .c2 .go{background:linear-gradient(180deg,#9bd045,var(--card-green-d))}
+.c3 .card-in{background:linear-gradient(180deg,#ecdcfa,var(--card-purple))} .c3 h3{color:#6e34ad} .c3 .go{background:linear-gradient(180deg,#b884ea,var(--card-purple-d))}
+.card .badge{
+  position:absolute; top:-10px; right:-6px; background:var(--gold-1); color:#6b3f00;
+  font-weight:900; font-size:13px; padding:4px 12px; border-radius:999px; box-shadow:0 3px 0 var(--gold-3); z-index:2;
+}
+
+/* Карточки-иллюстрации (готовая графика вместо CSS-рамки) */
+.card.img-card{ background:none; box-shadow:none; padding:0; border-radius:22px; }
+.card.img-card .card-img{
+  display:block; width:100%; height:auto; border-radius:22px;
+  filter:drop-shadow(0 12px 22px rgba(20,10,0,.4));
+}
+
+/* ============================================================
+   ИГРОВОЙ ЭКРАН
+   ============================================================ */
+.game-wrap{max-width:1000px; margin:18px auto}
+.game-top{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px}
+.game-top h2{margin:0; color:#fff; font-size:clamp(20px,2.4vw,32px); text-shadow:0 3px 0 rgba(0,0,0,.35); flex:1}
+.pill{background:rgba(255,255,255,.9); border-radius:999px; padding:8px 16px; font-weight:900; box-shadow:var(--shadow)}
+.bar{height:16px; border-radius:999px; background:rgba(255,255,255,.45); overflow:hidden; box-shadow:inset 0 2px 6px rgba(0,0,0,.25); margin-bottom:14px}
+.bar i{display:block; height:100%; width:0; border-radius:999px; background:linear-gradient(90deg,var(--gold-1),var(--leaf-1)); transition:width .4s}
+
+.task{text-align:center}
+.task .hint-ru{font-size:clamp(18px,2.2vw,28px); font-weight:900; color:var(--ink)}
+.task .pic-big{font-size:clamp(72px,11vw,140px); line-height:1.1; filter:drop-shadow(0 10px 12px rgba(0,0,0,.2))}
+.speak-btn{
+  border:0; cursor:pointer; font:inherit; font-weight:900; font-size:17px; color:#fff;
+  background:linear-gradient(180deg,#5cc7e8,#2a8fc0); box-shadow:0 5px 0 #1c6c94,var(--shadow);
+  padding:12px 24px; border-radius:999px; margin:4px;
+}
+.speak-btn.small{font-size:14px; padding:9px 18px; background:linear-gradient(180deg,#c8b6ff,#8148c0); box-shadow:0 5px 0 #5c2f8e,var(--shadow)}
+.speak-btn:active{transform:translateY(3px)}
+
+/* Слоты и буквы */
+.slots{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:18px 0}
+.slot{
+  width:52px; height:62px; border-radius:12px; display:grid; place-items:center;
+  font-size:28px; font-weight:900; text-transform:uppercase; color:var(--ink);
+  background:#fff6e2; box-shadow:inset 0 -4px 0 #e3cfa6, 0 3px 6px rgba(0,0,0,.18);
+  border:3px dashed #d2b784; cursor:pointer;
+}
+.slot.filled{border-style:solid; border-color:var(--leaf-2); background:#eaf7d2}
+.tiles{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:8px 0 16px}
+.tile{
+  min-width:52px; height:58px; padding:0 12px; border:0; cursor:pointer; font:inherit;
+  font-size:26px; font-weight:900; text-transform:uppercase; color:#5a3200; border-radius:14px;
+  background:linear-gradient(180deg,#ffe9ad,#f3c765); box-shadow:0 5px 0 #c99633, 0 8px 14px rgba(0,0,0,.2);
+  transition:.12s transform;
+}
+.tile:hover{transform:translateY(-3px)}
+.tile.used{visibility:hidden}
+/* Слова для предложений */
+.tiles.words .tile{font-size:19px; text-transform:none; height:52px; min-width:auto}
+.slots.sentence{min-height:70px; align-items:center; background:#fff6e2; border-radius:16px; padding:12px;
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.15); border:3px dashed #d2b784}
+.slots.sentence .tile{background:linear-gradient(180deg,#dff3b8,#a8d45e); box-shadow:0 5px 0 #6f9b2c; color:#31510f; font-size:19px; text-transform:none; height:52px; min-width:auto}
+.sentence-end{font-size:26px; font-weight:900; align-self:center}
+
+/* Варианты ответа (аудирование) */
+.options{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:18px 0}
+.opt{
+  border:0; cursor:pointer; font:inherit; font-weight:800; padding:18px 12px; border-radius:18px;
+  background:#fff6e2; box-shadow:0 5px 0 #d8bd8e, var(--shadow); font-size:17px; transition:.12s transform;
+}
+.opt .oe{display:block; font-size:56px; line-height:1.2}
+.opt:hover{transform:translateY(-4px)}
+.opt.correct{background:linear-gradient(180deg,#d6f0a6,#a3d453); box-shadow:0 5px 0 #6f9b2c}
+.opt.wrong{background:linear-gradient(180deg,#ffc9c9,#f08585); box-shadow:0 5px 0 #b64848}
+.opt[disabled]{cursor:default}
+
+.feedback{min-height:34px; font-weight:900; font-size:20px; text-align:center; margin-top:6px}
+.feedback.ok{color:#4c8b12} .feedback.no{color:#c0392b}
+.row-center{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px}
+
+/* Результат */
+.result{text-align:center}
+.stars{font-size:64px; letter-spacing:8px; margin:10px 0}
+.stars .off{opacity:.25}
+
+/* Списки (Уроки / Достижения / Профиль) */
+.grid-list{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px}
+.word-card{
+  background:#fff6e2; border-radius:16px; padding:14px; text-align:center; cursor:pointer;
+  box-shadow:0 4px 0 #d8bd8e; transition:.15s transform;
+}
+.word-card:hover{transform:translateY(-4px)}
+.word-card .we{font-size:46px; line-height:1.2}
+.word-card b{display:block; font-size:20px; color:#2f6a0e}
+.word-card small{color:var(--ink-soft); font-weight:700; font-size:14px}
+table.stats{width:100%; border-collapse:collapse; font-weight:800}
+table.stats td,table.stats th{padding:10px 8px; border-bottom:1px solid #e6d8b8; text-align:left}
+table.stats th{color:var(--ink-soft)}
+
+h2.sec{color:#fff; text-shadow:0 3px 0 rgba(0,0,0,.35); font-size:clamp(22px,2.6vw,34px); margin:6px 0 14px}
+.toast{
+  position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(120px);
+  background:#2d4b12; color:#fff; font-weight:800; padding:14px 26px; border-radius:999px;
+  box-shadow:var(--shadow); transition:.35s transform; z-index:99
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media (max-width:900px){
+  #bg{background-position:18% center}
+  .cards{grid-template-columns:1fr}
+  .title-wrap{margin-top:230px}
+  .game-wrap h2.sec{margin-top:260px}
+  .games-cards{margin-top:24px}
+  table.stats{table-layout:fixed}
+  table.stats th:nth-child(1),table.stats td:nth-child(1){width:34%}
+  table.stats th:nth-child(2),table.stats td:nth-child(2){width:20%}
+  table.stats th:nth-child(3),table.stats td:nth-child(3){width:32%}
+  table.stats th:nth-child(4),table.stats td:nth-child(4){width:14%}
+  table.stats td,table.stats th{padding:10px 4px; font-size:14px}
+  nav{order:3; width:100%; margin:6px 0 0}
+  header{flex-wrap:wrap; justify-content:space-between}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="bokeh"></div>
+
+<header>
+  <div class="logo" onclick="go('home')" title="На главную">
+    <div><b class="l">English</b><b class="g">Games ★</b></div>
+  </div>
+  <nav>
+    <button class="nav-btn" data-route="home" aria-current="page">🏠 Главная</button>
+    <button class="nav-btn" data-route="lessons">📖 Словарь</button>
+    <button class="nav-btn" data-route="games">🎮 Игры</button>
+    <button class="nav-btn" data-route="awards">⭐ Достижения</button>
+    <button class="nav-btn" data-route="profile">👤 Профиль</button>
+  </nav>
+  <button class="nav-btn btn-login" onclick="login()">★ <span id="loginLabel">Вход</span></button>
+</header>
+
+<main>
+  <!-- ================= ГЛАВНАЯ ================= -->
+  <section id="s-home" class="screen active">
+    <div class="hero">
+      <div class="title-wrap">
+        <h1 class="big-title"><span class="l1">English</span><span class="l2">Games</span></h1>
+        <div class="ribbon">Играй, учи английский, развивайся!</div>
+        <button class="btn gold start-btn" onclick="go('lessons')">🎮 Начать игру</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ИГРА ================= -->
+  <section id="s-game" class="screen">
+    <div class="game-wrap">
+      <div class="game-top">
+        <button class="btn ghost" onclick="quitGame()">← Назад</button>
+        <h2 id="gameTitle">Игра</h2>
+        <div class="pill" id="pillScore">⭐ 0</div>
+        <div class="pill" id="pillCount">1 / 8</div>
+      </div>
+      <div class="bar"><i id="progBar"></i></div>
+      <div class="wood"><div class="wood-in" id="gameBody"></div></div>
+    </div>
+  </section>
+
+  <!-- ================= РЕЗУЛЬТАТ ================= -->
+  <section id="s-result" class="screen">
+    <div class="game-wrap" style="max-width:640px">
+      <div class="wood"><div class="wood-in result">
+        <h2 style="margin:0 0 4px" id="resTitle">Отлично!</h2>
+        <div class="stars" id="resStars">★★★</div>
+        <p style="font-size:20px;font-weight:800" id="resText"></p>
+        <div class="row-center">
+          <button class="btn" onclick="replay()">🔁 Играть снова</button>
+          <button class="btn gold" onclick="go('home')">🏠 На главную</button>
+        </div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ================= ИГРЫ (список) ================= -->
+  <section id="s-games" class="screen">
+    <div class="game-wrap">
+      <h2 class="sec">🎮 Все игры · уровень A1 · тема «The World Around Us»</h2>
+      <div class="cards games-cards">
+        <button class="card c1 img-card" onclick="startGame('words')">
+          <span class="badge" id="badge-words">A1</span>
+          <img class="card-img" src="assets/card-words.png" alt="Слова — учим новые слова">
+        </button>
+        <button class="card c2 img-card" onclick="startGame('grammar')">
+          <span class="badge" id="badge-grammar">A1</span>
+          <img class="card-img" src="assets/card-grammar.png" alt="Грамматика — собираем предложения">
+        </button>
+        <button class="card c3 img-card" onclick="startGame('listen')">
+          <span class="badge" id="badge-listen">A1</span>
+          <img class="card-img" src="assets/card-listen.png" alt="Аудирование — слушаем и понимаем">
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= УРОКИ ================= -->
+  <section id="s-lessons" class="screen">
+    <div class="game-wrap">
+      <h2 class="sec">📖 Словарь урока — Nature &amp; The World Around Us</h2>
+      <div class="wood"><div class="wood-in">
+        <p style="font-weight:800;margin-top:0">Нажми на карточку — услышишь слово. Все слова из этого списка встречаются в играх.</p>
+        <div class="grid-list" id="lessonList"></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ================= ДОСТИЖЕНИЯ ================= -->
+  <section id="s-awards" class="screen">
+    <div class="game-wrap" style="max-width:760px">
+      <h2 class="sec">⭐ Мои достижения</h2>
+      <div class="wood"><div class="wood-in">
+        <table class="stats"><thead><tr><th>Игра</th><th>Звёзды</th><th>Лучший результат</th><th>№</th></tr></thead>
+        <tbody id="awardsBody"></tbody></table>
+        <p style="font-weight:800" id="awardsTotal"></p>
+        <button class="btn ghost" onclick="resetProgress()">Сбросить прогресс</button>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ================= ПРОФИЛЬ ================= -->
+  <section id="s-profile" class="screen">
+    <div class="game-wrap" style="max-width:620px">
+      <h2 class="sec">👤 Профиль</h2>
+      <div class="wood"><div class="wood-in" style="text-align:center">
+        <div style="font-size:80px">🧒</div>
+        <h3 style="margin:.2em 0" id="profName">Юный исследователь</h3>
+        <p style="font-weight:800">Уровень: <b>A1 · Beginner</b> · Тема: <b>The World Around Us</b></p>
+        <p style="font-weight:800">Собрано звёзд: <b id="profStars">0</b></p>
+        <div class="row-center">
+          <button class="btn" onclick="login()">✏️ Изменить имя</button>
+          <button class="btn gold" onclick="go('games')">🎮 К играм</button>
+        </div>
+        <hr style="border:0;border-top:2px dashed #e0cfa8;margin:20px 0">
+        <p style="font-weight:800;margin:0 0 8px">Голос озвучки</p>
+        <select id="voiceSelect" style="font:inherit;font-weight:800;padding:10px 14px;border-radius:12px;border:2px solid #d8bd8e;max-width:100%"></select>
+        <div class="row-center"><button class="speak-btn small" onclick="speak('Hello! Look at the beautiful world around us.')">🔊 Проверить голос</button></div>
+        <p id="ttsWarn" style="color:#c0392b;font-weight:800;display:none">В этом браузере синтез речи недоступен. Попробуй Chrome или Edge.</p>
+      </div></div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   1. КОНТЕНТ · CEFR A1 · тема "The World Around Us"
+   ============================================================ */
+const WORDS = [
+  {en:'sun',      ru:'солнце',   e:'☀️'},
+  {en:'tree',     ru:'дерево',   e:'🌳'},
+  {en:'flower',   ru:'цветок',   e:'🌼'},
+  {en:'river',    ru:'река',     e:'🏞️'},
+  {en:'bird',     ru:'птица',    e:'🐦'},
+  {en:'fish',     ru:'рыба',     e:'🐟'},
+  {en:'cloud',    ru:'облако',   e:'☁️'},
+  {en:'rain',     ru:'дождь',    e:'🌧️'},
+  {en:'snow',     ru:'снег',     e:'❄️'},
+  {en:'moon',     ru:'луна',     e:'🌙'},
+  {en:'star',     ru:'звезда',   e:'⭐'},
+  {en:'grass',    ru:'трава',    e:'🌱'},
+  {en:'leaf',     ru:'лист',     e:'🍃'},
+  {en:'forest',   ru:'лес',      e:'🌲'},
+  {en:'mountain', ru:'гора',     e:'⛰️'},
+  {en:'sea',      ru:'море',     e:'🌊'},
+  {en:'frog',     ru:'лягушка',  e:'🐸'},
+  {en:'bee',      ru:'пчела',    e:'🐝'},
+  {en:'butterfly',ru:'бабочка',  e:'🦋'},
+  {en:'rabbit',   ru:'кролик',   e:'🐰'},
+  {en:'rainbow',  ru:'радуга',   e:'🌈'},
+  {en:'mushroom', ru:'гриб',     e:'🍄'},
+  {en:'apple',    ru:'яблоко',   e:'🍎'},
+  {en:'wind',     ru:'ветер',    e:'💨'}
+];
+
+/* Предложения A1: Present Simple / Present Continuous / there is-are / can */
+const SENTENCES = [
+  {en:'The sun is very hot',            ru:'Солнце очень горячее',            end:'.'},
+  {en:'Birds fly in the sky',           ru:'Птицы летают в небе',             end:'.'},
+  {en:'I can see a big tree',           ru:'Я вижу большое дерево',           end:'.'},
+  {en:'The river is long and cold',     ru:'Река длинная и холодная',         end:'.'},
+  {en:'There are many flowers here',    ru:'Здесь много цветов',              end:'.'},
+  {en:'It is raining today',            ru:'Сегодня идёт дождь',              end:'.'},
+  {en:'The frog lives in the river',    ru:'Лягушка живёт в реке',            end:'.'},
+  {en:'We plant trees in spring',       ru:'Весной мы сажаем деревья',        end:'.'},
+  {en:'The bee likes yellow flowers',   ru:'Пчела любит жёлтые цветы',        end:'.'},
+  {en:'Snow is white and cold',         ru:'Снег белый и холодный',           end:'.'},
+  {en:'A rabbit runs in the forest',    ru:'Кролик бежит по лесу',            end:'.'},
+  {en:'Look at the beautiful rainbow',  ru:'Посмотри на красивую радугу',     end:'!'},
+  {en:'The moon is in the night sky',   ru:'Луна в ночном небе',              end:'.'},
+  {en:'Fish swim in the blue sea',      ru:'Рыбы плавают в синем море',       end:'.'}
+];
+
+/* Аудирование: понимание фразы на слух */
+const LISTEN_SENT = [
+  {en:'The bird is on the tree.',        ru:'Птица на дереве.',        wrong:['Птица в реке.','Птица под камнем.']},
+  {en:'It is windy and cold today.',     ru:'Сегодня ветрено и холодно.', wrong:['Сегодня жарко и солнечно.','Сегодня идёт снег.']},
+  {en:'I can see three green leaves.',   ru:'Я вижу три зелёных листа.', wrong:['Я вижу три жёлтых цветка.','Я вижу два дерева.']},
+  {en:'The rabbit eats an apple.',       ru:'Кролик ест яблоко.',      wrong:['Кролик пьёт воду.','Лягушка ест яблоко.']},
+  {en:'There is a big mountain there.',  ru:'Там большая гора.',       wrong:['Там большое море.','Там маленький лес.']},
+  {en:'Bees like flowers in summer.',    ru:'Пчёлы любят цветы летом.', wrong:['Птицы любят дождь зимой.','Пчёлы спят зимой.']},
+  {en:'The sky is blue and clear.',      ru:'Небо синее и чистое.',    wrong:['Небо серое и в облаках.','Море синее и тёплое.']},
+  {en:'We walk in the forest on Sunday.',ru:'В воскресенье мы гуляем в лесу.', wrong:['В субботу мы плаваем в море.','В воскресенье мы играем дома.']}
+];
+
+const ROUNDS = 8;
+
+/* ============================================================
+   2. ОЗВУЧКА — Web Speech API (offline, без внешних библиотек)
+   ============================================================ */
+const TTS = {
+  ok: 'speechSynthesis' in window,
+  voices: [], voice: null,
+  init(){
+    if(!this.ok){ document.getElementById('ttsWarn').style.display='block'; return; }
+    const load = () => {
+      this.voices = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+      if(!this.voices.length) return;
+      const saved = localStorage.getItem('eg_voice');
+      this.voice = this.voices.find(v => v.voiceURI === saved)
+        || this.voices.find(v => /en-GB/i.test(v.lang) && /female|zira|hazel|libby|sonia/i.test(v.name))
+        || this.voices.find(v => /en-US/i.test(v.lang) && /female|zira|aria|jenny/i.test(v.name))
+        || this.voices.find(v => /en-GB/i.test(v.lang))
+        || this.voices[0];
+      const sel = document.getElementById('voiceSelect');
+      sel.innerHTML = this.voices.map(v =>
+        `<option value="${v.voiceURI}" ${v===this.voice?'selected':''}>${v.name} (${v.lang})</option>`).join('');
+      sel.onchange = () => {
+        this.voice = this.voices.find(v => v.voiceURI === sel.value);
+        localStorage.setItem('eg_voice', sel.value);
+        this.say('This is my new voice.');
+      };
+    };
+    load();
+    speechSynthesis.onvoiceschanged = load;
+  },
+  say(text, rate=.85){
+    if(!this.ok) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = (this.voice && this.voice.lang) || 'en-GB';
+    if(this.voice) u.voice = this.voice;
+    u.rate = rate; u.pitch = 1.05; u.volume = 1;
+    speechSynthesis.speak(u);
+  }
+};
+function speak(t, rate){ TTS.say(t, rate); }
+
+/* Звуковые эффекты — Web Audio, без файлов */
+let AC = null;
+function beep(type){
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    const seq = type==='ok' ? [[660,0],[880,.09],[1180,.18]]
+              : type==='win'? [[523,0],[659,.11],[784,.22],[1046,.33]]
+              : [[220,0],[170,.12]];
+    seq.forEach(([f,t])=>{
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.type='sine'; o.frequency.value=f;
+      o.connect(g); g.connect(AC.destination);
+      const s=AC.currentTime+t;
+      g.gain.setValueAtTime(.0001,s);
+      g.gain.exponentialRampToValueAtTime(.22,s+.02);
+      g.gain.exponentialRampToValueAtTime(.0001,s+.22);
+      o.start(s); o.stop(s+.25);
+    });
+  }catch(e){}
+}
+
+/* ============================================================
+   3. ПРОГРЕСС
+   ============================================================ */
+const DEF = {words:{stars:0,best:0,played:0}, grammar:{stars:0,best:0,played:0}, listen:{stars:0,best:0,played:0}, name:''};
+let P = load();
+function load(){ try{ return Object.assign(JSON.parse(JSON.stringify(DEF)), JSON.parse(localStorage.getItem('eg_progress')||'{}')); }catch(e){ return JSON.parse(JSON.stringify(DEF)); } }
+function save(){ localStorage.setItem('eg_progress', JSON.stringify(P)); paintProgress(); }
+function resetProgress(){ P = JSON.parse(JSON.stringify(DEF)); save(); toast('Прогресс сброшен'); }
+function paintProgress(){
+  const names = {words:'🔤 Слова', grammar:'🧩 Грамматика', listen:'🎧 Аудирование'};
+  document.getElementById('awardsBody').innerHTML = Object.keys(names).map(k=>{
+    const d=P[k]; return `<tr><td>${names[k]}</td><td>${'★'.repeat(d.stars)||'—'}</td><td>${d.best}/${ROUNDS}</td><td>${d.played}</td></tr>`;
+  }).join('');
+  const total = P.words.stars+P.grammar.stars+P.listen.stars;
+  document.getElementById('awardsTotal').textContent = `Всего звёзд: ${total} из 9`;
+  document.getElementById('profStars').textContent = total;
+  document.getElementById('profName').textContent = P.name || 'Юный исследователь';
+  document.getElementById('loginLabel').textContent = P.name || 'Вход';
+  ['words','grammar','listen'].forEach(k=>{
+    const b=document.getElementById('badge-'+k);
+    if(b) b.textContent = P[k].stars ? '★'.repeat(P[k].stars) : 'A1';
+  });
+}
+function login(){
+  const n = prompt('Как тебя зовут?', P.name || '');
+  if(n && n.trim()){ P.name = n.trim().slice(0,20); save(); toast('Привет, '+P.name+'! 👋'); }
+}
+
+/* ============================================================
+   4. НАВИГАЦИЯ
+   ============================================================ */
+function go(route){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById('s-'+route);
+  (el || document.getElementById('s-home')).classList.add('active');
+  document.querySelectorAll('.nav-btn[data-route]').forEach(b=>
+    b.setAttribute('aria-current', b.dataset.route===route ? 'page' : 'false'));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(route==='awards'||route==='profile') paintProgress();
+}
+document.querySelectorAll('.nav-btn[data-route]').forEach(b=> b.onclick = ()=>{ if(G.active) quitGame(true); go(b.dataset.route); });
+
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200);
+}
+const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+const pick = (arr,n) => shuffle(arr).slice(0,n);
+
+/* ============================================================
+   5. ДВИЖОК ИГРЫ
+   ============================================================ */
+const G = { active:null, list:[], i:0, score:0, locked:false };
+const TITLES = {words:'🔤 Слова — учим и пишем', grammar:'🧩 Грамматика — собери предложение', listen:'🎧 Аудирование — слушай и выбирай'};
+
+function startGame(kind){
+  G.active=kind; G.i=0; G.score=0; G.locked=false;
+  G.list = kind==='words'   ? pick(WORDS, ROUNDS)
+         : kind==='grammar' ? pick(SENTENCES, ROUNDS)
+         : buildListenRounds();
+  document.getElementById('gameTitle').textContent = TITLES[kind];
+  go('game'); render();
+  if(TTS.ok) speechSynthesis.cancel();
+}
+function replay(){ startGame(G.active || 'words'); }
+function quitGame(silent){ G.active=null; if(TTS.ok) speechSynthesis.cancel(); if(!silent) go('home'); }
+
+function hud(){
+  document.getElementById('pillScore').textContent = '⭐ ' + G.score;
+  document.getElementById('pillCount').textContent = (G.i+1) + ' / ' + ROUNDS;
+  document.getElementById('progBar').style.width = (G.i/ROUNDS*100) + '%';
+}
+function next(){
+  G.i++; G.locked=false;
+  if(G.i >= ROUNDS) finish(); else render();
+}
+function finish(){
+  const k=G.active, acc=G.score/ROUNDS;
+  const st = acc>=.9 ? 3 : acc>=.7 ? 2 : acc>=.5 ? 1 : 0;
+  P[k].played++; P[k].best = Math.max(P[k].best, G.score); P[k].stars = Math.max(P[k].stars, st);
+  save(); beep('win');
+  document.getElementById('resStars').innerHTML = [0,1,2].map(i=>`<span class="${i<st?'':'off'}">★</span>`).join('');
+  document.getElementById('resTitle').textContent = st===3?'Превосходно! 🎉' : st===2?'Здорово! 👏' : st===1?'Хорошо! 🙂' : 'Попробуй ещё раз 💪';
+  document.getElementById('resText').textContent = `Правильных ответов: ${G.score} из ${ROUNDS}`;
+  go('result');
+}
+function render(){
+  hud();
+  const body = document.getElementById('gameBody');
+  if(G.active==='words')   renderWords(body);
+  if(G.active==='grammar') renderGrammar(body);
+  if(G.active==='listen')  renderListen(body);
+}
+function feedback(el, ok, text){
+  el.className = 'feedback ' + (ok?'ok':'no');
+  el.textContent = text;
+}
+
+/* ---------- ИГРА 1: СЛОВА (лексика + орфография) ---------- */
+function renderWords(body){
+  const w = G.list[G.i];
+  const letters = shuffle(w.en.split(''));
+  const filled = new Array(w.en.length).fill(null);
+  let hintUsed = false;
+
+  body.innerHTML = `
+    <div class="task">
+      <div class="pic-big">${w.e}</div>
+      <div class="hint-ru">${w.ru}</div>
+      <div class="row-center">
+        <button class="speak-btn" id="bSpeak">🔊 Послушать слово</button>
+        <button class="speak-btn small" id="bHint">💡 Подсказка</button>
+      </div>
+      <div class="slots" id="slots"></div>
+      <div class="tiles" id="tiles"></div>
+      <div class="feedback" id="fb">Собери слово из букв ⬆️</div>
+    </div>`;
+
+  const slotsEl = document.getElementById('slots'), tilesEl = document.getElementById('tiles'), fb = document.getElementById('fb');
+  document.getElementById('bSpeak').onclick = () => speak(w.en, .8);
+  document.getElementById('bHint').onclick = () => {
+    if(hintUsed || G.locked) return;
+    hintUsed = true;
+    const idx = filled.findIndex(x=>x===null);
+    if(idx<0) return;
+    const ti = letters.findIndex((L,i)=> L===w.en[idx] && !usedIdx.has(i));
+    if(ti>=0) placeLetter(ti, idx);
+    fb.className='feedback'; fb.textContent='Подсказка использована 💡';
+  };
+
+  const usedIdx = new Set();
+  function drawSlots(){
+    slotsEl.innerHTML = filled.map((c,i)=>
+      `<div class="slot ${c!==null?'filled':''}" data-i="${i}">${c!==null?c.letter:''}</div>`).join('');
+    slotsEl.querySelectorAll('.slot').forEach(s=> s.onclick = ()=>{
+      if(G.locked) return;
+      const i=+s.dataset.i; if(filled[i]===null) return;
+      usedIdx.delete(filled[i].idx); filled[i]=null; drawAll();
+    });
+  }
+  function drawTiles(){
+    tilesEl.innerHTML = letters.map((L,i)=>
+      `<button class="tile ${usedIdx.has(i)?'used':''}" data-i="${i}">${L}</button>`).join('');
+    tilesEl.querySelectorAll('.tile').forEach(t=> t.onclick = ()=>{
+      if(G.locked) return;
+      const i=+t.dataset.i; if(usedIdx.has(i)) return;
+      const slot = filled.findIndex(x=>x===null);
+      if(slot<0) return;
+      placeLetter(i, slot);
+    });
+  }
+  function placeLetter(tileIdx, slot){
+    filled[slot] = {letter:letters[tileIdx], idx:tileIdx};
+    usedIdx.add(tileIdx); drawAll();
+    if(filled.every(Boolean)) check();
+  }
+  function drawAll(){ drawSlots(); drawTiles(); }
+  function check(){
+    const answer = filled.map(f=>f.letter).join('');
+    G.locked = true;
+    if(answer === w.en){
+      G.score += hintUsed ? 1 : 1; beep('ok');
+      feedback(fb, true, `✅ ${w.en.toUpperCase()} — верно!`);
+      speak(w.en, .8);
+      setTimeout(next, 1400);
+    }else{
+      beep('no');
+      feedback(fb, false, '❌ Не так. Попробуй ещё раз!');
+      setTimeout(()=>{
+        filled.fill(null); usedIdx.clear(); G.locked=false; drawAll();
+        fb.className='feedback'; fb.textContent='Слушай внимательно 🔊';
+        speak(w.en, .7);
+      }, 1200);
+    }
+  }
+  drawAll();
+  setTimeout(()=>speak(w.en, .8), 350);
+
+  // Клавиатура
+  document.onkeydown = (ev)=>{
+    if(G.active!=='words' || G.locked) return;
+    if(ev.key==='Backspace'){
+      ev.preventDefault();
+      for(let i=filled.length-1;i>=0;i--){ if(filled[i]){ usedIdx.delete(filled[i].idx); filled[i]=null; break; } }
+      drawAll(); return;
+    }
+    if(/^[a-zA-Z]$/.test(ev.key)){
+      const L = ev.key.toLowerCase();
+      const ti = letters.findIndex((x,i)=> x===L && !usedIdx.has(i));
+      const slot = filled.findIndex(x=>x===null);
+      if(ti>=0 && slot>=0) placeLetter(ti, slot);
+    }
+  };
+}
+
+/* ---------- ИГРА 2: ГРАММАТИКА (порядок слов) ---------- */
+function renderGrammar(body){
+  const s = G.list[G.i];
+  const target = s.en.split(' ');
+  let bank = shuffle(target.slice());
+  if(bank.join(' ')===target.join(' ') && target.length>2) bank = shuffle(bank);
+  let built = [];
+
+  body.innerHTML = `
+    <div class="task">
+      <div class="hint-ru">${s.ru}</div>
+      <div class="row-center">
+        <button class="speak-btn" id="bSpeak">🔊 Послушать предложение</button>
+        <button class="speak-btn small" id="bSlow">🐢 Медленно</button>
+      </div>
+      <div class="slots sentence" id="built"></div>
+      <div class="tiles words" id="bank"></div>
+      <div class="row-center">
+        <button class="btn gold" id="bCheck" disabled>Проверить ✓</button>
+        <button class="btn ghost" id="bClear">Очистить</button>
+      </div>
+      <div class="feedback" id="fb">Составь предложение из слов ⬇️</div>
+    </div>`;
+
+  const builtEl=document.getElementById('built'), bankEl=document.getElementById('bank'), fb=document.getElementById('fb');
+  document.getElementById('bSpeak').onclick = ()=> speak(s.en + s.end, .85);
+  document.getElementById('bSlow').onclick  = ()=> speak(s.en + s.end, .55);
+  document.getElementById('bClear').onclick = ()=>{ if(!G.locked){ built=[]; draw(); } };
+  document.getElementById('bCheck').onclick = check;
+
+  function draw(){
+    builtEl.innerHTML = built.map((w,i)=>`<button class="tile" data-i="${i}">${w}</button>`).join('')
+      + (built.length ? `<span class="sentence-end">${s.end}</span>` : '<span style="opacity:.45;font-weight:800">нажимай на слова…</span>');
+    builtEl.querySelectorAll('.tile').forEach(t=> t.onclick = ()=>{
+      if(G.locked) return;
+      const i=+t.dataset.i; bank.push(built[i]); built.splice(i,1); draw();
+    });
+    bankEl.innerHTML = bank.map((w,i)=>`<button class="tile" data-i="${i}">${w}</button>`).join('') || '<span style="opacity:.45;font-weight:800">все слова использованы</span>';
+    bankEl.querySelectorAll('.tile').forEach(t=> t.onclick = ()=>{
+      if(G.locked) return;
+      const i=+t.dataset.i; built.push(bank[i]); bank.splice(i,1); draw();
+    });
+    document.getElementById('bCheck').disabled = bank.length>0;
+  }
+  function check(){
+    G.locked = true;
+    const ok = built.join(' ') === target.join(' ');
+    if(ok){
+      G.score++; beep('ok');
+      feedback(fb, true, '✅ Правильно! ' + s.en + s.end);
+      speak(s.en + s.end, .85);
+      setTimeout(next, 1900);
+    }else{
+      beep('no');
+      feedback(fb, false, '❌ Порядок слов другой. Слушай подсказку!');
+      speak(s.en + s.end, .6);
+      setTimeout(()=>{
+        bank = shuffle(target.slice()); built=[]; G.locked=false; draw();
+        fb.className='feedback'; fb.textContent='Попробуй ещё раз 💪';
+      }, 2200);
+    }
+  }
+  draw();
+  setTimeout(()=>speak(s.en + s.end, .85), 400);
+}
+
+/* ---------- ИГРА 3: АУДИРОВАНИЕ ---------- */
+function buildListenRounds(){
+  const half = Math.floor(ROUNDS/2);
+  const pics = pick(WORDS, half).map(w=>({
+    type:'pic', audio:w.en,
+    options: shuffle([{e:w.e, ok:true}, ...pick(WORDS.filter(x=>x.en!==w.en),3).map(x=>({e:x.e, ok:false}))])
+  }));
+  const sents = pick(LISTEN_SENT, ROUNDS-half).map(s=>({
+    type:'sent', audio:s.en,
+    options: shuffle([{t:s.ru, ok:true}, ...s.wrong.map(t=>({t, ok:false}))])
+  }));
+  return shuffle(pics.concat(sents));
+}
+function renderListen(body){
+  const q = G.list[G.i];
+  const isPic = q.type==='pic';
+  body.innerHTML = `
+    <div class="task">
+      <div style="font-size:64px">🎧</div>
+      <div class="hint-ru">${isPic ? 'Послушай слово и выбери картинку' : 'Послушай и выбери правильный перевод'}</div>
+      <div class="row-center">
+        <button class="speak-btn" id="bPlay">▶️ Слушать</button>
+        <button class="speak-btn small" id="bSlow">🐢 Медленно</button>
+      </div>
+      <div class="options" id="opts">
+        ${q.options.map((o,i)=> isPic
+          ? `<button class="opt" data-i="${i}"><span class="oe">${o.e}</span></button>`
+          : `<button class="opt" data-i="${i}">${o.t}</button>`).join('')}
+      </div>
+      <div class="feedback" id="fb">Можно слушать сколько нужно 🔁</div>
+    </div>`;
+
+  const fb = document.getElementById('fb');
+  const play = (r)=> speak(q.audio, r);
+  document.getElementById('bPlay').onclick = ()=> play(.85);
+  document.getElementById('bSlow').onclick = ()=> play(.55);
+
+  document.querySelectorAll('#opts .opt').forEach(b=> b.onclick = ()=>{
+    if(G.locked) return;
+    G.locked = true;
+    const o = q.options[+b.dataset.i];
+    document.querySelectorAll('#opts .opt').forEach((x,i)=>{
+      x.disabled = true;
+      if(q.options[i].ok) x.classList.add('correct');
+    });
+    if(o.ok){
+      b.classList.add('correct'); G.score++; beep('ok');
+      feedback(fb, true, '✅ Верно! ' + q.audio);
+      setTimeout(next, 1600);
+    }else{
+      b.classList.add('wrong'); beep('no');
+      feedback(fb, false, '❌ Правильный ответ подсвечен зелёным');
+      speak(q.audio, .6);
+      setTimeout(next, 2600);
+    }
+  });
+  setTimeout(()=>play(.85), 450);
+}
+
+/* ============================================================
+   6. УРОКИ + ИНИЦИАЛИЗАЦИЯ
+   ============================================================ */
+document.getElementById('lessonList').innerHTML = WORDS.map(w=>
+  `<div class="word-card" onclick="speak('${w.en}',.8)">
+     <div class="we">${w.e}</div><b>${w.en}</b><small>${w.ru}</small>
+     <div style="font-size:20px;margin-top:4px">🔊</div>
+   </div>`).join('');
+
+(function bokeh(){
+  const box=document.getElementById('bokeh'), frag=document.createDocumentFragment();
+  for(let i=0;i<22;i++){
+    const d=document.createElement('div'); d.className='dot';
+    const s=6+Math.random()*22;
+    d.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;bottom:-40px;
+      animation-duration:${12+Math.random()*16}s;animation-delay:${-Math.random()*20}s`;
+    frag.appendChild(d);
+  }
+  box.appendChild(frag);
+})();
+
+TTS.init();
+paintProgress();
+// Разблокировка аудио по первому клику (политика автоплея браузеров)
+window.addEventListener('pointerdown', function once(){
+  if(TTS.ok){ const u=new SpeechSynthesisUtterance(' '); u.volume=0; speechSynthesis.speak(u); }
+  try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)(); AC.resume(); }catch(e){}
+  window.removeEventListener('pointerdown', once);
+}, {once:true});
+</script>
+</body>
+</html>
